@@ -20,7 +20,7 @@
     <string name="textWoman">Γυναίκα</string>
     <string name="textMan">Άνδρας</string>
     <string name="chooseSex">Επιλέξτε φύλο</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="dayFood">Σημερινή Διατροφή</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
