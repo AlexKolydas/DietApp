@@ -21,7 +21,8 @@
     <string name="textMan">Άνδρας</string>
     <string name="chooseSex">Επιλέξτε φύλο</string>
     <string name="dayFood">Σημερινή Διατροφή</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="search">Αναζήτηση</string>
+    <string name="alreadyAdded">Επιλεγμένα Τρόφημα</string>
+    <string name="count">Συνολικές Μονάδες:</string>
+
 </resources>
