@@ -1,47 +1,46 @@
 package dietapp.dietapp.AddFood;
 
-import android.support.v4.view.MenuItemCompat;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import dietapp.dietapp.R;
 
 public class AddFood extends AppCompatActivity {
 
     ListView searchList, alreadyAddedFood;
-    ArrayList<String> itemsOnSearch,itemsAdded;
-    HashMap<Integer,String> test;
-    Map<Integer,String> multiMap;
-
+    ArrayList<String> itemsOnSearch1,itemsOnSearch2,itemsAdded;
+    ArrayAdapter<String> addedAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food);
 
         searchList = (ListView) findViewById(R.id.searchFoodList);
+        registerForContextMenu(searchList); //GIVING ME THE CHOICE TO LONG CLICK AND SELECT ACTION
+
         alreadyAddedFood = (ListView) findViewById(R.id.alreadyAddedList);
+        registerForContextMenu(alreadyAddedFood); //GIVING ME THE CHOICE TO LONG CLICK AND SELECT ACTION
 
-        itemsOnSearch = new ArrayList<>();
+        itemsOnSearch1 = new ArrayList<>();
+        itemsOnSearch2 = new ArrayList<>();
+
         itemsAdded=new ArrayList<>();
-
-
 
 
         //CALL SEARCH FUNCTION
@@ -49,29 +48,35 @@ public class AddFood extends AppCompatActivity {
     }
 
 
-    private void foodSearch() {
+    public void foodSearch() {
 
-        itemsOnSearch.add("one");
-        itemsOnSearch.add("two");
-        itemsOnSearch.add("three");
-        itemsOnSearch.add("four");
-        itemsOnSearch.add("one");
-        itemsOnSearch.add("two");
-        itemsOnSearch.add("three");
-        itemsOnSearch.add("four");
-        itemsOnSearch.add("one");
-        itemsOnSearch.add("two");
-        itemsOnSearch.add("three");
-        itemsOnSearch.add("four");
-        itemsOnSearch.add("one");
-        itemsOnSearch.add("two");
-        itemsOnSearch.add("three");
-        itemsOnSearch.add("four");
+        itemsOnSearch1.add("one");
+        itemsOnSearch1.add("two");
+        itemsOnSearch1.add("three");
+        itemsOnSearch1.add("four");
+        itemsOnSearch1.add("one");
+        itemsOnSearch1.add("two");
+        itemsOnSearch1.add("three");
+        itemsOnSearch1.add("four");
+        itemsOnSearch1.add("one");
+
+        itemsOnSearch2.add("two");
+        itemsOnSearch2.add("three");
+        itemsOnSearch2.add("four");
+        itemsOnSearch2.add("one");
+        itemsOnSearch2.add("two");
+        itemsOnSearch2.add("three");
+        itemsOnSearch2.add("four");
+
+
+
 
         //ArrayAdapter converts an ArrayList of objects into View items loaded into the ListView container.
-        ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch);
-        searchList.setAdapter(searchAdapter);
-        searchList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        ArrayAdapter<String> searchAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,itemsOnSearch1);
+        ArrayAdapter<String> searchAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch2);
+
+        searchList.setAdapter(searchAdapter1);
+        searchList.setAdapter(searchAdapter2);
 
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -118,12 +123,24 @@ public class AddFood extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 ArrayList<String> tempList = new ArrayList<>();
 
-                for (String temp : itemsOnSearch) {
+                int count=0;
+                int count1=0;
+                for (String temp : itemsOnSearch1) {
                     if (temp.toLowerCase().contains(newText.toLowerCase())) {
                         tempList.add(temp);
-                        Log.d("alekos", "templist->" + tempList);
                     }
+                    count++;
                 }
+                Log.d("alekos", "templist->" +count);
+
+                for (String temp : itemsOnSearch2) {
+                    if (temp.toLowerCase().contains(newText.toLowerCase())) {
+                        tempList.add(temp);
+                    }
+                    count1++;
+
+                }
+                Log.d("alekos", "templist->" +count1);
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(AddFood.this, android.R.layout.simple_list_item_1, tempList);
                 searchList.setAdapter(adapter);
@@ -139,9 +156,32 @@ public class AddFood extends AppCompatActivity {
 
         itemsAdded.add(searchedMessage);
 
-        ArrayAdapter<String>addedAdapter= new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,itemsAdded);
+        addedAdapter= new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,itemsAdded);
         alreadyAddedFood.setAdapter(addedAdapter);
 
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_general, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        if(item.getItemId()==R.id.delete){
+            Toast.makeText(getApplicationContext(),"calling code"+item,Toast.LENGTH_LONG).show();
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo(); // init the info the position from
+            itemsAdded.remove(info.position); // remove the item from the list
+            addedAdapter.notifyDataSetChanged();//updating the adapter
+        }else{
+            return false;
+        }
+        return true;
+    }
+
+
 }
 

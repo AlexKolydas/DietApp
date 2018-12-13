@@ -24,5 +24,6 @@
     <string name="search">Αναζήτηση</string>
     <string name="alreadyAdded">Επιλεγμένα Τρόφημα</string>
     <string name="count">Συνολικές Μονάδες:</string>
+    <string name="deleteProduct">Διαγραφή Προιόντος</string>
 
 </resources>
