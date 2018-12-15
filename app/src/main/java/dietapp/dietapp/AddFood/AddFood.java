@@ -1,6 +1,7 @@
 package dietapp.dietapp.AddFood;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -26,13 +28,13 @@ public class AddFood extends AppCompatActivity {
 
     ListView searchList, alreadyAddedFood;
     ArrayList<String> itemsOnSearch1, itemsOnSearch2;
-    static ArrayList<String>itemsAdded; //****MAYBE FOR CHANGE***
+    static ArrayList<String> itemsAdded; //****MAYBE FOR CHANGE***
     ArrayAdapter<String> addedAdapter;
 
-    Button touk;
+    FloatingActionButton fabToBasket;
+    static TextView countText;
 
-    static int count = 0;
-    static int count1 = 0;
+    static int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,24 +52,38 @@ public class AddFood extends AppCompatActivity {
 
         itemsAdded = new ArrayList<>();
 
+        countText=(TextView)findViewById(R.id.basketCount);
 
-        //TEST BUTTON
-        touk = (Button) findViewById(R.id.tak);
-        touk.setOnClickListener(new View.OnClickListener() {
+
+        //FAB BUTTON
+        fabToBasket = (FloatingActionButton) findViewById(R.id.fabToBasket);
+        fabToBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent inte = new Intent(AddFood.this, AddFoodBasket.class);
-                startActivity(inte);
+                Intent goToBasket = new Intent(AddFood.this, AddFoodBasket.class);
+                startActivity(goToBasket);
             }
         });
 
 
+
         //CALL SEARCH FUNCTION
         foodSearch();
+        countTextbasket(count);
+    }
+
+    //Count text method on fab button
+    public static void countTextbasket(int countT) {
+        if (countT == 0) {
+            countText.setText(null);
+        } else {
+            countText.setText(String.valueOf(count));
+        }
     }
 
 
     public void foodSearch() {
+
 
         itemsOnSearch1.add("one");
         itemsOnSearch1.add("two");
@@ -99,14 +115,14 @@ public class AddFood extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                AddFoodBasket add=new AddFoodBasket();
+                count++;
+                countTextbasket(count);
                 String searchMessage = searchList.getItemAtPosition(position).toString(); //searchMessage gets the value of the pressed item in list
                 Toast.makeText(AddFood.this, "" + searchMessage, Toast.LENGTH_SHORT).show();
-                //GO TO THE OTHER LISTVIEW
                 itemsAdded.add(searchMessage);// made it static so it is created here but displayed in the AddFoodBasket.java
-
             }
         });
+
 
     }
 
@@ -164,33 +180,8 @@ public class AddFood extends AppCompatActivity {
                 return true;
             }
         });
-        Log.d("alekos", "templist->" + count);
-        Log.d("alekos", "templist->" + count1);
-
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_general, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.delete) {
-            Toast.makeText(getApplicationContext(), "calling code" + item, Toast.LENGTH_LONG).show();
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo(); // init the info the position from
-            itemsAdded.remove(info.position); // remove the item from the list
-            addedAdapter.notifyDataSetChanged();//updating the adapter
-        } else {
-            return false;
-        }
-        return true;
     }
 
 

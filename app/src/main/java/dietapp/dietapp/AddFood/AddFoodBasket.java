@@ -20,12 +20,12 @@ import java.util.List;
 import dietapp.dietapp.R;
 
 import static dietapp.dietapp.AddFood.AddFood.count;
+import static dietapp.dietapp.AddFood.AddFood.countTextbasket;
 import static dietapp.dietapp.AddFood.AddFood.itemsAdded;
 
 public class AddFoodBasket extends AppCompatActivity {
 
     ListView alreadyAddedFoodtest;
-//    ArrayList<String>itemsAdded;
     ArrayAdapter<String> addedAdapter;
 
     @Override
@@ -36,11 +36,12 @@ public class AddFoodBasket extends AppCompatActivity {
         alreadyAddedFoodtest = (ListView) findViewById(R.id.alreadyAddedList);
         registerForContextMenu(alreadyAddedFoodtest);
 
-
         alreadyAdded();
+
     }
 
     public void alreadyAdded() {
+
 
         //Display the static itemsAdded list
         addedAdapter= new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,itemsAdded);
@@ -48,20 +49,23 @@ public class AddFoodBasket extends AppCompatActivity {
         addedAdapter.notifyDataSetChanged();
         Log.d("alekos","lista:"+itemsAdded);
 
-
     }
 
+    //REMOVES FOOD ONLONGCLICK
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_general, menu);
+        menu.setHeaderTitle("Επιλογές");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
         if(item.getItemId()==R.id.delete){
+            count--;
+            countTextbasket(count);
             Toast.makeText(getApplicationContext(),"calling code"+item,Toast.LENGTH_LONG).show();
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo(); // init the info the position from
             itemsAdded.remove(info.position); // remove the item from the list

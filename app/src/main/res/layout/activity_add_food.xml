@@ -88,11 +88,37 @@
         app:layout_constraintStart_toEndOf="@+id/countText"
         app:layout_constraintTop_toTopOf="@+id/countText" />
 
-    <Button
-        android:id="@+id/tak"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabToBasket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TAK"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="451dp" />
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_cart" />
+
+    <TextView
+        android:id="@+id/basketCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:elevation="10dp"
+        android:text=""
+        android:textColor="@color/colorYellow"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/fabToBasket"
+        app:layout_constraintEnd_toEndOf="@+id/fabToBasket"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/fabToBasket"
+        app:layout_constraintTop_toTopOf="@+id/fabToBasket"
+        app:layout_constraintVertical_bias="0.59000003" />
 </android.support.constraint.ConstraintLayout>
