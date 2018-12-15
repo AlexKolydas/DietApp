@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Login.LoginActivity">
+        <activity android:name=".Login.LoginActivity">
+
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 
@@ -33,8 +33,9 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".AddFood.AddFood"></activity>
-        <activity android:name=".AllFoods.AllFoods"></activity>
+        <activity android:name=".AddFood.AddFood" />
+        <activity android:name=".AllFoods.AllFoods" />
+        <activity android:name=".AddFood.AddFoodBasket"></activity>
     </application>
 
 </manifest>

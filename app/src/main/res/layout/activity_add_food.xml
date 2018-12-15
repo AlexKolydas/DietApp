@@ -87,4 +87,12 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/countText"
         app:layout_constraintTop_toTopOf="@+id/countText" />
+
+    <Button
+        android:id="@+id/tak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TAK"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="451dp" />
 </android.support.constraint.ConstraintLayout>

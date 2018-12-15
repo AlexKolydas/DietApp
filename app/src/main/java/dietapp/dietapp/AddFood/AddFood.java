@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -24,8 +25,15 @@ import dietapp.dietapp.R;
 public class AddFood extends AppCompatActivity {
 
     ListView searchList, alreadyAddedFood;
-    ArrayList<String> itemsOnSearch1,itemsOnSearch2,itemsAdded;
+    ArrayList<String> itemsOnSearch1, itemsOnSearch2;
+    static ArrayList<String>itemsAdded; //****MAYBE FOR CHANGE***
     ArrayAdapter<String> addedAdapter;
+
+    Button touk;
+
+    static int count = 0;
+    static int count1 = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +48,18 @@ public class AddFood extends AppCompatActivity {
         itemsOnSearch1 = new ArrayList<>();
         itemsOnSearch2 = new ArrayList<>();
 
-        itemsAdded=new ArrayList<>();
+        itemsAdded = new ArrayList<>();
+
+
+        //TEST BUTTON
+        touk = (Button) findViewById(R.id.tak);
+        touk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent inte = new Intent(AddFood.this, AddFoodBasket.class);
+                startActivity(inte);
+            }
+        });
 
 
         //CALL SEARCH FUNCTION
@@ -69,10 +88,8 @@ public class AddFood extends AppCompatActivity {
         itemsOnSearch2.add("four");
 
 
-
-
         //ArrayAdapter converts an ArrayList of objects into View items loaded into the ListView container.
-        ArrayAdapter<String> searchAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,itemsOnSearch1);
+        ArrayAdapter<String> searchAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch1);
         ArrayAdapter<String> searchAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch2);
 
         searchList.setAdapter(searchAdapter1);
@@ -81,10 +98,13 @@ public class AddFood extends AppCompatActivity {
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                AddFoodBasket add=new AddFoodBasket();
                 String searchMessage = searchList.getItemAtPosition(position).toString(); //searchMessage gets the value of the pressed item in list
                 Toast.makeText(AddFood.this, "" + searchMessage, Toast.LENGTH_SHORT).show();
                 //GO TO THE OTHER LISTVIEW
-                alreadyAdded(searchMessage);
+                itemsAdded.add(searchMessage);// made it static so it is created here but displayed in the AddFoodBasket.java
+
             }
         });
 
@@ -123,24 +143,20 @@ public class AddFood extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 ArrayList<String> tempList = new ArrayList<>();
 
-                int count=0;
-                int count1=0;
                 for (String temp : itemsOnSearch1) {
                     if (temp.toLowerCase().contains(newText.toLowerCase())) {
                         tempList.add(temp);
+
                     }
-                    count++;
                 }
-                Log.d("alekos", "templist->" +count);
 
                 for (String temp : itemsOnSearch2) {
                     if (temp.toLowerCase().contains(newText.toLowerCase())) {
                         tempList.add(temp);
+
                     }
-                    count1++;
 
                 }
-                Log.d("alekos", "templist->" +count1);
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(AddFood.this, android.R.layout.simple_list_item_1, tempList);
                 searchList.setAdapter(adapter);
@@ -148,35 +164,30 @@ public class AddFood extends AppCompatActivity {
                 return true;
             }
         });
+        Log.d("alekos", "templist->" + count);
+        Log.d("alekos", "templist->" + count1);
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
 
-    public void alreadyAdded(String searchedMessage) {
-
-        itemsAdded.add(searchedMessage);
-
-        addedAdapter= new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,itemsAdded);
-        alreadyAddedFood.setAdapter(addedAdapter);
-
-    }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_general, menu);
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item){
-        if(item.getItemId()==R.id.delete){
-            Toast.makeText(getApplicationContext(),"calling code"+item,Toast.LENGTH_LONG).show();
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete) {
+            Toast.makeText(getApplicationContext(), "calling code" + item, Toast.LENGTH_LONG).show();
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo(); // init the info the position from
             itemsAdded.remove(info.position); // remove the item from the list
             addedAdapter.notifyDataSetChanged();//updating the adapter
-        }else{
+        } else {
             return false;
         }
         return true;
