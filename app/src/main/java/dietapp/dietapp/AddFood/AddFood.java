@@ -1,39 +1,39 @@
 package dietapp.dietapp.AddFood;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import dietapp.dietapp.R;
 
+
 public class AddFood extends AppCompatActivity {
 
-    ListView searchList, alreadyAddedFood;
+    ListView searchList;
     ArrayList<String> itemsOnSearch1, itemsOnSearch2;
-    static ArrayList<String> itemsAdded; //****MAYBE FOR CHANGE***
-    ArrayAdapter<String> addedAdapter;
+    static ArrayList<String> itemsAdded;
+
 
     FloatingActionButton fabToBasket;
     static TextView countText;
-
+    static String searchMessage;
     static int count;
 
     @Override
@@ -44,15 +44,12 @@ public class AddFood extends AppCompatActivity {
         searchList = (ListView) findViewById(R.id.searchFoodList);
         registerForContextMenu(searchList); //GIVING ME THE CHOICE TO LONG CLICK AND SELECT ACTION
 
-        alreadyAddedFood = (ListView) findViewById(R.id.alreadyAddedList);
-        registerForContextMenu(alreadyAddedFood); //GIVING ME THE CHOICE TO LONG CLICK AND SELECT ACTION
-
         itemsOnSearch1 = new ArrayList<>();
         itemsOnSearch2 = new ArrayList<>();
 
         itemsAdded = new ArrayList<>();
-
-        countText=(TextView)findViewById(R.id.basketCount);
+        
+        countText = (TextView) findViewById(R.id.basketCount);
 
 
         //FAB BUTTON
@@ -66,11 +63,23 @@ public class AddFood extends AppCompatActivity {
         });
 
 
-
         //CALL SEARCH FUNCTION
         foodSearch();
+        //CALL COUNT TEXT ON FAB BUTTON FUNCTION
         countTextbasket(count);
+
     }
+
+    //SHARED PREFERENCES Save ArrayList
+    public void saveArrayList(ArrayList<String> list) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AddFood.this);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString("testShared", json);
+        editor.apply();     // This line is IMPORTANT !!!
+    }
+
 
     //Count text method on fab button
     public static void countTextbasket(int countT) {
@@ -81,27 +90,26 @@ public class AddFood extends AppCompatActivity {
         }
     }
 
-
     public void foodSearch() {
 
 
-        itemsOnSearch1.add("one");
-        itemsOnSearch1.add("two");
-        itemsOnSearch1.add("three");
-        itemsOnSearch1.add("four");
-        itemsOnSearch1.add("one");
-        itemsOnSearch1.add("two");
-        itemsOnSearch1.add("three");
-        itemsOnSearch1.add("four");
-        itemsOnSearch1.add("one");
+        itemsOnSearch1.add("one1");
+        itemsOnSearch1.add("two1");
+        itemsOnSearch1.add("three1");
+        itemsOnSearch1.add("four1");
+        itemsOnSearch1.add("one1");
+        itemsOnSearch1.add("two1");
+        itemsOnSearch1.add("three1");
+        itemsOnSearch1.add("four1");
+        itemsOnSearch1.add("one1");
 
-        itemsOnSearch2.add("two");
-        itemsOnSearch2.add("three");
-        itemsOnSearch2.add("four");
-        itemsOnSearch2.add("one");
-        itemsOnSearch2.add("two");
-        itemsOnSearch2.add("three");
-        itemsOnSearch2.add("four");
+        itemsOnSearch2.add("two2");
+        itemsOnSearch2.add("three2");
+        itemsOnSearch2.add("four2");
+        itemsOnSearch2.add("one2");
+        itemsOnSearch2.add("two2");
+        itemsOnSearch2.add("three2");
+        itemsOnSearch2.add("four2");
 
 
         //ArrayAdapter converts an ArrayList of objects into View items loaded into the ListView container.
@@ -117,13 +125,14 @@ public class AddFood extends AppCompatActivity {
 
                 count++;
                 countTextbasket(count);
-                String searchMessage = searchList.getItemAtPosition(position).toString(); //searchMessage gets the value of the pressed item in list
+                searchMessage = searchList.getItemAtPosition(position).toString(); //searchMessage gets the value of the pressed item in list
                 Toast.makeText(AddFood.this, "" + searchMessage, Toast.LENGTH_SHORT).show();
+
                 itemsAdded.add(searchMessage);// made it static so it is created here but displayed in the AddFoodBasket.java
+
+                saveArrayList(itemsAdded); // Save the list in shared Preferences
             }
         });
-
-
     }
 
     /*
@@ -136,7 +145,6 @@ public class AddFood extends AppCompatActivity {
     So Android undertakes that since it's not your business to render the menu,
     you shall not control what menu is actually passed to you inside onCreateOptionsMenu.
      */
-
 
     //METHOD FOR SEARCHING THE FOODS
     @Override
@@ -184,6 +192,13 @@ public class AddFood extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
+    //WHEN PRESSING BACK BUTTON
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        count = 0;
+    }
 
 }
 
