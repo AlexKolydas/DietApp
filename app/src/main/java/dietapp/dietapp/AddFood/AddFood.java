@@ -18,12 +18,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import dietapp.dietapp.R;
-import dietapp.dietapp.Shared.SharedListFood;
+import dietapp.dietapp.Model.SharedListFood;
 import dietapp.dietapp.Shared.SharedListFoodHelper;
 
 
@@ -42,6 +40,7 @@ public class AddFood extends AppCompatActivity {
     // The helper that manages writing to SharedPreferences.
     private SharedListFoodHelper sharedArrayPreferencesHelper;
 
+    SharedListFood sharedArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +72,8 @@ public class AddFood extends AppCompatActivity {
         // Instantiate a SharedPreferencesHelper.
         SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
         sharedArrayPreferencesHelper=new SharedListFoodHelper(sharedPreferences);
+
+
 
         //CALL SEARCH FUNCTION
         foodSearch();
@@ -130,9 +131,9 @@ public class AddFood extends AppCompatActivity {
                 itemsAdded.add(searchMessage);// made it static so it is created here but displayed in the AddFoodBasket.java
 
                 //Shared Preferences
-                SharedListFood sharedArray=new SharedListFood(itemsAdded);
+                sharedArray=new SharedListFood(itemsAdded);
 
-                boolean isSuccess= sharedArrayPreferencesHelper.saveArrayList(sharedArray);
+                boolean isSuccess= sharedArrayPreferencesHelper.saveArrayList(sharedArray); //sends itemsAdded to saveArrayList in shared preferences
                 if (isSuccess) {
                     Toast.makeText(getApplicationContext(),"Personal information saved", Toast.LENGTH_LONG).show();
                 } else {

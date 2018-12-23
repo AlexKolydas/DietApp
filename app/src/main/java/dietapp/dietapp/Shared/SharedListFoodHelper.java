@@ -1,7 +1,6 @@
 package dietapp.dietapp.Shared;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import dietapp.dietapp.Model.SharedListFood;
 
 
 public class SharedListFoodHelper {
@@ -40,7 +40,8 @@ public class SharedListFoodHelper {
         String json = prefs.getString("testShared", null);
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
-        loadArrayList= gson.fromJson(json, type);
+        loadArrayList = gson.fromJson(json, type);
+
         return loadArrayList;
 
     }

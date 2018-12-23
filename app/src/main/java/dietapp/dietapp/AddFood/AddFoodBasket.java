@@ -1,9 +1,6 @@
 package dietapp.dietapp.AddFood;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,16 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import dietapp.dietapp.R;
-import dietapp.dietapp.Shared.SharedListFood;
+import dietapp.dietapp.Model.SharedListFood;
 import dietapp.dietapp.Shared.SharedListFoodHelper;
 
 import static dietapp.dietapp.AddFood.AddFood.count;
@@ -54,6 +45,7 @@ public class AddFoodBasket extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedArrayPreferencesHelper = new SharedListFoodHelper(sharedPreferences);
 
+
         alreadyAdded(); //display the list depends the adapter
 
     }
@@ -62,16 +54,12 @@ public class AddFoodBasket extends AppCompatActivity {
     public void alreadyAdded() {
 
         ArrayList<String> loadedList = sharedArrayPreferencesHelper.getArrayList();//gets the loaded list from shared preferences
-        //if loaded list from shared pref is empty
-        if (loadedList.equals("")) {
-            //Display the static itemsAdded list
-            addedAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsAdded);
-            alreadyAddedFoodtest.setAdapter(addedAdapter);
-        } else {
-            //Display the sharedPreferences  list
-            addedAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, loadedList);
-            alreadyAddedFoodtest.setAdapter(addedAdapter);
+        //if loadedlist from shared preferences is not null add it to my itemsAdded
+        if (loadedList != null) {
+            itemsAdded = loadedList;
         }
+        addedAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsAdded);
+        alreadyAddedFoodtest.setAdapter(addedAdapter);
         //Notify adapter
         addedAdapter.notifyDataSetChanged();
 
@@ -106,7 +94,6 @@ public class AddFoodBasket extends AppCompatActivity {
                 //Shared Preferences
                 SharedListFood sharedListFood = new SharedListFood(itemsAdded);
                 sharedArrayPreferencesHelper.saveArrayList(sharedListFood);
-
             }
 
         } else {
@@ -114,5 +101,6 @@ public class AddFoodBasket extends AppCompatActivity {
         }
         return true;
     }
+
 
 }
