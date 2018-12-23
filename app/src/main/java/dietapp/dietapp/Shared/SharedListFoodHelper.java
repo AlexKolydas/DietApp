@@ -15,7 +15,7 @@ public class SharedListFoodHelper {
 
     // The injected SharedPreferences implementation to use for persistence.
     private SharedPreferences prefs;
-
+    private SharedPreferences.Editor editor;
 
     // Constructor with dependency injection.
     public SharedListFoodHelper(SharedPreferences sharedPreferences) {
@@ -24,9 +24,9 @@ public class SharedListFoodHelper {
 
     //SHARED PREFERENCES Save ArrayList
     public boolean saveArrayList(SharedListFood list) {
-        SharedPreferences.Editor editor = prefs.edit();
+        editor = prefs.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(list.getMlist()); //put in json the list from my model(SharedFoodList) which is the list i provide(itemsAdded)
+        String json = gson.toJson(list.getMlist());//put in json the list from my model(SharedFoodList) which is the list i provide(itemsAdded)
         editor.putString("testShared", json);
         return editor.commit();     // This line is IMPORTANT !!!
     }

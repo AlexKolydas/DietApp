@@ -141,6 +141,13 @@ public class AddFood extends AppCompatActivity {
                 }
             }
         });
+
+        //import the loadedList to the itemsAdded because if i don't it will override my old shared preferences list
+        ArrayList<String> loadedList = sharedArrayPreferencesHelper.getArrayList();//gets the loaded list from shared preferences
+        //if loadedlist from shared preferences is not null add it to my itemsAdded
+        if (loadedList != null) {
+            itemsAdded = loadedList;
+        }
     }
 
     /*
