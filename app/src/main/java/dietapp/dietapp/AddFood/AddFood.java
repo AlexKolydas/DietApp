@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,12 +23,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import dietapp.dietapp.R;
+import dietapp.dietapp.Shared.SharedListFood;
+import dietapp.dietapp.Shared.SharedListFoodHelper;
 
 
 public class AddFood extends AppCompatActivity {
 
     ListView searchList;
-    ArrayList<String> itemsOnSearch1, itemsOnSearch2;
+    ArrayList<String> itemsOnSearch;
     static ArrayList<String> itemsAdded;
 
 
@@ -35,6 +38,10 @@ public class AddFood extends AppCompatActivity {
     static TextView countText;
     static String searchMessage;
     static int count;
+
+    // The helper that manages writing to SharedPreferences.
+    private SharedListFoodHelper sharedArrayPreferencesHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +51,13 @@ public class AddFood extends AppCompatActivity {
         searchList = (ListView) findViewById(R.id.searchFoodList);
         registerForContextMenu(searchList); //GIVING ME THE CHOICE TO LONG CLICK AND SELECT ACTION
 
-        itemsOnSearch1 = new ArrayList<>();
-        itemsOnSearch2 = new ArrayList<>();
+        itemsOnSearch = new ArrayList<>();
 
         itemsAdded = new ArrayList<>();
-        
+
         countText = (TextView) findViewById(R.id.basketCount);
+
+
 
 
         //FAB BUTTON
@@ -62,24 +70,15 @@ public class AddFood extends AppCompatActivity {
             }
         });
 
+        // Instantiate a SharedPreferencesHelper.
+        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
+        sharedArrayPreferencesHelper=new SharedListFoodHelper(sharedPreferences);
 
         //CALL SEARCH FUNCTION
         foodSearch();
         //CALL COUNT TEXT ON FAB BUTTON FUNCTION
         countTextbasket(count);
-
     }
-
-    //SHARED PREFERENCES Save ArrayList
-    public void saveArrayList(ArrayList<String> list) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AddFood.this);
-        SharedPreferences.Editor editor = prefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString("testShared", json);
-        editor.apply();     // This line is IMPORTANT !!!
-    }
-
 
     //Count text method on fab button
     public static void countTextbasket(int countT) {
@@ -93,44 +92,52 @@ public class AddFood extends AppCompatActivity {
     public void foodSearch() {
 
 
-        itemsOnSearch1.add("one1");
-        itemsOnSearch1.add("two1");
-        itemsOnSearch1.add("three1");
-        itemsOnSearch1.add("four1");
-        itemsOnSearch1.add("one1");
-        itemsOnSearch1.add("two1");
-        itemsOnSearch1.add("three1");
-        itemsOnSearch1.add("four1");
-        itemsOnSearch1.add("one1");
-
-        itemsOnSearch2.add("two2");
-        itemsOnSearch2.add("three2");
-        itemsOnSearch2.add("four2");
-        itemsOnSearch2.add("one2");
-        itemsOnSearch2.add("two2");
-        itemsOnSearch2.add("three2");
-        itemsOnSearch2.add("four2");
+        itemsOnSearch.add("one1");
+        itemsOnSearch.add("two1");
+        itemsOnSearch.add("three1");
+        itemsOnSearch.add("four1");
+        itemsOnSearch.add("one1");
+        itemsOnSearch.add("two1");
+        itemsOnSearch.add("three1");
+        itemsOnSearch.add("four1");
+        itemsOnSearch.add("one1");
+        itemsOnSearch.add("two 2");
+        itemsOnSearch.add("three2");
+        itemsOnSearch.add("four2");
+        itemsOnSearch.add("one2");
+        itemsOnSearch.add("two2");
+        itemsOnSearch.add("three2");
+        itemsOnSearch.add("four2");
 
 
         //ArrayAdapter converts an ArrayList of objects into View items loaded into the ListView container.
-        ArrayAdapter<String> searchAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch1);
-        ArrayAdapter<String> searchAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch2);
+        ArrayAdapter<String> searchAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemsOnSearch);
 
         searchList.setAdapter(searchAdapter1);
-        searchList.setAdapter(searchAdapter2);
 
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 count++;
                 countTextbasket(count);
                 searchMessage = searchList.getItemAtPosition(position).toString(); //searchMessage gets the value of the pressed item in list
+                //VLEPO AN IPARXEI I LEKSI TWO KAI NA VALO KAPOIO COUNTER GIA TOUS PONTOUS
+                if(searchMessage.contains("two")){
+                    Log.d("alekos","tak"+searchMessage);
+                }
                 Toast.makeText(AddFood.this, "" + searchMessage, Toast.LENGTH_SHORT).show();
 
                 itemsAdded.add(searchMessage);// made it static so it is created here but displayed in the AddFoodBasket.java
 
-                saveArrayList(itemsAdded); // Save the list in shared Preferences
+                //Shared Preferences
+                SharedListFood sharedArray=new SharedListFood(itemsAdded);
+
+                boolean isSuccess= sharedArrayPreferencesHelper.saveArrayList(sharedArray);
+                if (isSuccess) {
+                    Toast.makeText(getApplicationContext(),"Personal information saved", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),"Personal information NOT", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -167,19 +174,10 @@ public class AddFood extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 ArrayList<String> tempList = new ArrayList<>();
 
-                for (String temp : itemsOnSearch1) {
+                for (String temp : itemsOnSearch) {
                     if (temp.toLowerCase().contains(newText.toLowerCase())) {
                         tempList.add(temp);
-
                     }
-                }
-
-                for (String temp : itemsOnSearch2) {
-                    if (temp.toLowerCase().contains(newText.toLowerCase())) {
-                        tempList.add(temp);
-
-                    }
-
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(AddFood.this, android.R.layout.simple_list_item_1, tempList);
